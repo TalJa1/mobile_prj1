@@ -1,24 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdrulmqvl8tif"]
+[gd_scene load_steps=3 format=3 uid="uid://cdrulmqvl8tif"]
 
 [ext_resource type="Script" uid="uid://pkqnwky8rfum" path="res://scenes/start/start.gd" id="1_dbemb"]
+[ext_resource type="AudioStream" uid="uid://7as7f2kw2dc7" path="res://assets/sounds/start/Michael Vignola - Under Water.mp3" id="2_8budp"]
 
 [node name="Node2D_Start" type="Node2D"]
 script = ExtResource("1_dbemb")
 
 [node name="Button_Play" type="Button" parent="."]
-offset_left = 455.0
-offset_top = 329.0
-offset_right = 559.0
-offset_bottom = 394.0
+offset_left = 434.0
+offset_top = 283.0
+offset_right = 538.0
+offset_bottom = 348.0
 text = "Play
 "
 
 [node name="Button_Exit" type="Button" parent="."]
-offset_left = 647.0
-offset_top = 329.0
-offset_right = 751.0
-offset_bottom = 394.0
+offset_left = 626.0
+offset_top = 283.0
+offset_right = 730.0
+offset_bottom = 348.0
 text = "Exit"
+
+[node name="AudioStreamPlayer2D_Start" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_8budp")
+volume_db = -7.675
+autoplay = true
 
 [connection signal="pressed" from="Button_Play" to="." method="_on_button_play_pressed"]
 [connection signal="pressed" from="Button_Exit" to="." method="_on_button_exit_pressed"]

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://7as7f2kw2dc7"
+path="res://.godot/imported/Michael Vignola - Under Water.mp3-3839e1d7d4b2dc1cef2041c30f2819cb.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/start/Michael Vignola - Under Water.mp3"
+dest_files=["res://.godot/imported/Michael Vignola - Under Water.mp3-3839e1d7d4b2dc1cef2041c30f2819cb.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
