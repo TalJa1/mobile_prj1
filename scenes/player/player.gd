@@ -29,7 +29,19 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 
 	# Horizontal input: returns -1.0..1.0 depending on ui_left/ui_right
+	# Also allow physical 'A' and 'D' keys for left/right movement
 	var direction := Input.get_axis("ui_left", "ui_right")
+
+	# Combine axis with physical A/D key presses so both arrow keys and A/D work
+	var a_pressed := Input.is_physical_key_pressed(KEY_A)
+	var d_pressed := Input.is_physical_key_pressed(KEY_D)
+	if a_pressed:
+		direction -= 1.0
+	if d_pressed:
+		direction += 1.0
+
+	# Keep direction in the -1..1 range (preserves analog input if present)
+	direction = clamp(direction, -1.0, 1.0)
 
 	# Determine if running: Shift held while moving with A or D
 	var is_running := false

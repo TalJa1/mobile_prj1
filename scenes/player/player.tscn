@@ -370,6 +370,7 @@ animation = &"attack"
 offset = Vector2(0, -32)
 
 [node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
+position = Vector2(0.5, -126)
 
 [node name="CollisionShape2D_Player" type="CollisionShape2D" parent="."]
 position = Vector2(-1, -43.875)
