@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://dhjruqh4bt3gl"]
+
+[ext_resource type="Texture2D" uid="uid://bffqn20lpj7oj" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/GandalfHardcore Background layers/Normal BG/GandalfHardcore Background layers_layer 5.png" id="1_du7my"]
+[ext_resource type="Script" uid="uid://cvcuufr701j0u" path="res://scenes/plays/play1st_background/play_1_st_background.gd" id="1_uh8uv"]
+[ext_resource type="Texture2D" uid="uid://ha24cgg3tpah" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/GandalfHardcore Background layers/Normal BG/GandalfHardcore Background layers_layer 4.png" id="2_uh8uv"]
+[ext_resource type="Texture2D" uid="uid://bvc8t6t1ys251" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/GandalfHardcore Background layers/Normal BG/GandalfHardcore Background layers_layer 3.png" id="3_d813g"]
+[ext_resource type="Texture2D" uid="uid://dswsts4qhwwv2" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/GandalfHardcore Background layers/Normal BG/GandalfHardcore Background layers_layer 2.png" id="4_gbln8"]
+[ext_resource type="Texture2D" uid="uid://b4q4r7x8jehgg" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/GandalfHardcore Background layers/Normal BG/GandalfHardcore Background layers_layer 1.png" id="5_x8mkh"]
+
+[node name="ParallaxBackground" type="ParallaxBackground"]
+script = ExtResource("1_uh8uv")
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxLayer"]
+offset_right = 1153.0
+offset_bottom = 650.0
+texture = ExtResource("1_du7my")
+
+[node name="TextureRect2" type="TextureRect" parent="ParallaxLayer"]
+offset_right = 1153.0
+offset_bottom = 650.0
+texture = ExtResource("2_uh8uv")
+
+[node name="TextureRect3" type="TextureRect" parent="ParallaxLayer"]
+offset_right = 1153.0
+offset_bottom = 650.0
+texture = ExtResource("3_d813g")
+
+[node name="TextureRect4" type="TextureRect" parent="ParallaxLayer"]
+offset_right = 1153.0
+offset_bottom = 650.0
+texture = ExtResource("4_gbln8")
+
+[node name="TextureRect5" type="TextureRect" parent="ParallaxLayer"]
+offset_right = 1153.0
+offset_bottom = 650.0
+texture = ExtResource("5_x8mkh")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(575, 325)
