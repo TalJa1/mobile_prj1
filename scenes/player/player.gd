@@ -57,7 +57,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction * current_speed
 	else:
 		# Smoothly decelerate to 0 when no input (use DECELERATION to control stopping)
-		velocity.x = move_toward(velocity.x, 0, DECELERATION * delta)
+		# velocity.x = move_toward(velocity.x, 0, DECELERATION * delta)
+		velocity.x = 0
 
 	# Move the character using the built-in helper
 	move_and_slide()
