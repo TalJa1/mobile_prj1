@@ -1,8 +1,67 @@
-[gd_scene load_steps=2 format=3 uid="uid://2rjoqfqhw4nh"]
+[gd_scene load_steps=10 format=3 uid="uid://2rjoqfqhw4nh"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_4u85a"]
+[ext_resource type="Texture2D" uid="uid://d0issughuy5uh" path="res://assets/GandalfHardcore/GandalfHardcore Character Asset Pack/GandalfHardcore Character Asset Pack/Character skin colors/Male Skin1.png" id="1_8afob"]
+[ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/player.gd" id="1_dovo2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dovo2"]
+atlas = ExtResource("1_8afob")
+region = Rect2(0, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmlin"]
+atlas = ExtResource("1_8afob")
+region = Rect2(80, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lvxji"]
+atlas = ExtResource("1_8afob")
+region = Rect2(160, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p47bc"]
+atlas = ExtResource("1_8afob")
+region = Rect2(240, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75vfm"]
+atlas = ExtResource("1_8afob")
+region = Rect2(320, 0, 80, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0owmy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dovo2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gmlin")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lvxji")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p47bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75vfm")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dovo2"]
+radius = 17.0
+height = 89.75
 
 [node name="CharacterBody2D_Player" type="CharacterBody2D"]
+script = ExtResource("1_dovo2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_0owmy")
+animation = &"idle"
+frame_progress = 0.806877
+offset = Vector2(0, -32)
+
+[node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
 
 [node name="CollisionShape2D_Player" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_4u85a")
+position = Vector2(-1, -43.875)
+shape = SubResource("CapsuleShape2D_dovo2")
