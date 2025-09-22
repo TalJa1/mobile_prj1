@@ -477,7 +477,7 @@ sources/0 = SubResource("TileSetAtlasSource_4b3n2")
 [node name="Node2D" type="Node2D"]
 
 [node name="CharacterBody2D_Player" parent="." instance=ExtResource("1_4b3n2")]
-position = Vector2(198, 406)
+position = Vector2(214, 383)
 
 [node name="TileMapLayer_Ground" type="TileMapLayer" parent="."]
 position = Vector2(108, -1)
