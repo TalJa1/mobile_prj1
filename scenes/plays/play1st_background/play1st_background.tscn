@@ -10,32 +10,34 @@
 [node name="ParallaxBackground" type="ParallaxBackground"]
 script = ExtResource("1_uh8uv")
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+[node name="Parallax2D" type="Parallax2D" parent="."]
+texture_repeat = 2
+repeat_size = Vector2(1024, 0)
+repeat_times = 3
+follow_viewport = false
 
-[node name="TextureRect" type="TextureRect" parent="ParallaxLayer"]
-offset_right = 1153.0
-offset_bottom = 650.0
+[node name="TextureRect" type="TextureRect" parent="Parallax2D"]
+offset_top = -461.0
+offset_right = 1024.0
+offset_bottom = 404.0
 texture = ExtResource("1_du7my")
 
-[node name="TextureRect2" type="TextureRect" parent="ParallaxLayer"]
-offset_right = 1153.0
+[node name="TextureRect2" type="TextureRect" parent="Parallax2D"]
+offset_right = 1024.0
 offset_bottom = 650.0
 texture = ExtResource("2_uh8uv")
 
-[node name="TextureRect3" type="TextureRect" parent="ParallaxLayer"]
-offset_right = 1153.0
+[node name="TextureRect3" type="TextureRect" parent="Parallax2D"]
+offset_right = 1024.0
 offset_bottom = 650.0
 texture = ExtResource("3_d813g")
 
-[node name="TextureRect4" type="TextureRect" parent="ParallaxLayer"]
-offset_right = 1153.0
+[node name="TextureRect4" type="TextureRect" parent="Parallax2D"]
+offset_right = 1024.0
 offset_bottom = 650.0
 texture = ExtResource("4_gbln8")
 
-[node name="TextureRect5" type="TextureRect" parent="ParallaxLayer"]
-offset_right = 1153.0
-offset_bottom = 650.0
+[node name="TextureRect5" type="TextureRect" parent="Parallax2D"]
+offset_right = 1024.0
+offset_bottom = 811.0
 texture = ExtResource("5_x8mkh")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(575, 325)

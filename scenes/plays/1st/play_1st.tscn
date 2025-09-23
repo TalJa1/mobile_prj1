@@ -477,9 +477,7 @@ sources/0 = SubResource("TileSetAtlasSource_4b3n2")
 
 [node name="Node2D_Play1st" type="Node2D"]
 
-[node name="Node2D_Background" type="Node2D" parent="."]
-
-[node name="ParallaxBackground" parent="Node2D_Background" instance=ExtResource("3_c563m")]
+[node name="ParallaxBackground" parent="." instance=ExtResource("3_c563m")]
 
 [node name="CharacterBody2D_Player" parent="." instance=ExtResource("1_4b3n2")]
 position = Vector2(214, 383)
