@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
 
-const SPEED := 300.0
-const RUN_MULTIPLIER := 1.6
+const SPEED := 200.0
+const RUN_MULTIPLIER := 2.5
 const JUMP_VELOCITY := -400.0
 const DECELERATION := 1200.0
 
