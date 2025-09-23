@@ -13,8 +13,14 @@ const INVERT_SPRITE_FLIP := true
 @export var run_action_name: String = "ui_shift"
 @export var run_scancode_l: int = 16777248
 @export var run_scancode_r: int = 16777249
+@export var attack_action_name: String = "attack"
+@export var attack_scancode: int = 74 # J key scancode fallback (may be engine/platform dependent)
+@export var attack_lock_time: float = 0.65
 
 var sprite: AnimatedSprite2D
+var _prev_j_pressed: bool = false
+var _is_attacking: bool = false
+var _attack_timer: float = 0.0
 
 func _ready() -> void:
 	sprite = $AnimatedSprite2D
@@ -75,11 +81,25 @@ func _physics_process(delta: float) -> void:
 	# Move the character using the built-in helper
 	move_and_slide()
 
-	# Decide which animation to play
+	# Update attack timer (lock animation for a short time)
+	if _is_attacking:
+		_attack_timer += delta
+		if _attack_timer >= attack_lock_time:
+			_is_attacking = false
+
+	# Handle attack input after movement to avoid missing the key
+	_handle_attack_input()
+
+	# Decide which animation to play (attack lock check inside will prevent override)
 	_update_animation(direction, is_running)
 
 
 func _update_animation(direction: float, is_running: bool) -> void:
+	# If currently in attack lock, keep attack animation
+	if _is_attacking and is_on_floor():
+		_play_animation_if_changed("attack")
+		return
+
 	# Jump animations take precedence when not on floor
 	if not is_on_floor():
 		# Use upward / downward frame based on vertical velocity
@@ -109,3 +129,24 @@ func _play_animation_if_changed(anim_name: String) -> void:
 	if sprite.animation != anim_name:
 		sprite.animation = anim_name
 		sprite.play()
+
+
+func _handle_attack_input() -> void:
+	# Detect attack via InputMap action or physical J key (edge-detected)
+	var attack_pressed := false
+	if attack_action_name != "" and InputMap.has_action(attack_action_name):
+		attack_pressed = Input.is_action_just_pressed(attack_action_name)
+	else:
+		var j_pressed := Input.is_physical_key_pressed(KEY_J)
+		attack_pressed = j_pressed and not _prev_j_pressed
+		_prev_j_pressed = j_pressed
+
+	if attack_pressed:
+		_start_attack()
+
+
+func _start_attack() -> void:
+	# Begin attack: play animation and lock for the configured time
+	_is_attacking = true
+	_attack_timer = 0.0
+	_play_animation_if_changed("attack")

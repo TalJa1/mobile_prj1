@@ -206,7 +206,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -241,7 +241,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"die",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -366,7 +366,8 @@ script = ExtResource("1_dovo2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0owmy")
-animation = &"walk"
+animation = &"attack"
+frame_progress = 0.145398
 offset = Vector2(0, -32)
 
 [node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
