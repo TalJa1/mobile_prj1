@@ -14,18 +14,18 @@ script = ExtResource("1_dovo2")
 [node name="AnimatedSprite2D_Body" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_38p3q")
-animation = &"attack"
-frame_progress = 0.145398
+animation = &"run"
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Cloths" type="AnimatedSprite2D" parent="."]
+visible = false
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("3_1hkhk")
-animation = &"bluepant_attack"
-frame_progress = 0.784846
+animation = &"bluepant_idle"
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Hairs" type="AnimatedSprite2D" parent="."]
+visible = false
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_38p3q")
 animation = &"attack"
@@ -33,6 +33,7 @@ frame_progress = 0.145398
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Weapons" type="AnimatedSprite2D" parent="."]
+visible = false
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_38p3q")
 animation = &"attack"
