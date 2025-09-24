@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=4 uid="uid://c6rjv5bpcgku2"]
 
-[ext_resource type="PackedScene" uid="uid://2rjoqfqhw4nh" path="res://scenes/player/player.tscn" id="1_4b3n2"]
+[ext_resource type="PackedScene" uid="uid://2rjoqfqhw4nh" path="res://scenes/player/bare/player.tscn" id="1_4b3n2"]
 [ext_resource type="Texture2D" uid="uid://d2ulm5dbu2juj" path="res://assets/oak_woods_v1.0/oak_woods_tileset.png" id="1_tpukk"]
 [ext_resource type="PackedScene" uid="uid://dhjruqh4bt3gl" path="res://scenes/plays/play1st_background/play1st_background.tscn" id="3_c563m"]
 [ext_resource type="Texture2D" uid="uid://oek0jn21m3ur" path="res://assets/GandalfHardcore/GandalfHardcore FREE Platformer Assets/GandalfHardcore FREE Platformer Assets/Birch1.png" id="4_fejpw"]

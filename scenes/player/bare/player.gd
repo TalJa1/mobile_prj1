@@ -17,13 +17,27 @@ const INVERT_SPRITE_FLIP := true
 @export var attack_scancode: int = 74 # J key scancode fallback (may be engine/platform dependent)
 @export var attack_lock_time: float = 0.65
 
-var sprite: AnimatedSprite2D
+@export var sprite_path: NodePath = NodePath("AnimatedSprite2D")
+var sprite: AnimatedSprite2D = null
 var _prev_j_pressed: bool = false
 var _is_attacking: bool = false
 var _attack_timer: float = 0.0
 
 func _ready() -> void:
-	sprite = $AnimatedSprite2D
+	# Try configured NodePath first (Inspector)
+	if sprite_path and sprite_path != NodePath(""):
+		sprite = get_node_or_null(sprite_path) as AnimatedSprite2D
+
+	# Fallback: direct child with that name
+	if not sprite:
+		sprite = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+
+	# Fallback: recursive search among descendants
+	if not sprite:
+		sprite = _find_animated_sprite_descendant(self)
+
+	if not sprite:
+		push_error("AnimatedSprite2D node not found for player script; animation calls will be skipped.")
 
 func _physics_process(delta: float) -> void:
 	# Apply gravity when in the air
@@ -118,14 +132,17 @@ func _update_animation(direction: float, is_running: bool) -> void:
 		else:
 			_play_animation_if_changed("walk")
 
-	# Flip sprite depending on movement direction
-	if direction < 0:
-		sprite.flip_h = not INVERT_SPRITE_FLIP
-	elif direction > 0:
-		sprite.flip_h = INVERT_SPRITE_FLIP
+	# Flip sprite depending on movement direction (only if sprite exists)
+	if sprite:
+		if direction < 0:
+			sprite.flip_h = not INVERT_SPRITE_FLIP
+		elif direction > 0:
+			sprite.flip_h = INVERT_SPRITE_FLIP
 
 
 func _play_animation_if_changed(anim_name: String) -> void:
+	if not sprite:
+		return
 	if sprite.animation != anim_name:
 		sprite.animation = anim_name
 		sprite.play()
@@ -150,3 +167,13 @@ func _start_attack() -> void:
 	_is_attacking = true
 	_attack_timer = 0.0
 	_play_animation_if_changed("attack")
+
+
+func _find_animated_sprite_descendant(root):
+	for child in root.get_children():
+		if child is AnimatedSprite2D:
+			return child
+		var found = _find_animated_sprite_descendant(child)
+		if found:
+			return found
+	return null

@@ -1,7 +1,7 @@
 [gd_scene load_steps=50 format=3 uid="uid://2rjoqfqhw4nh"]
 
 [ext_resource type="Texture2D" uid="uid://d0issughuy5uh" path="res://assets/GandalfHardcore/GandalfHardcore Character Asset Pack/GandalfHardcore Character Asset Pack/Character skin colors/Male Skin1.png" id="1_8afob"]
-[ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/player.gd" id="1_dovo2"]
+[ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/bare/player.gd" id="1_dovo2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0owmy"]
 atlas = ExtResource("1_8afob")
@@ -363,15 +363,16 @@ height = 89.75
 [node name="CharacterBody2D_Player" type="CharacterBody2D"]
 script = ExtResource("1_dovo2")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D_Body" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0owmy")
 animation = &"attack"
 frame_progress = 0.145398
 offset = Vector2(0, -32)
 
-[node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
-position = Vector2(-0.5, -65)
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-1, -130)
+scale = Vector2(2, 2)
 zoom = Vector2(1.5, 1.5)
 
 [node name="CollisionShape2D_Player" type="CollisionShape2D" parent="."]
