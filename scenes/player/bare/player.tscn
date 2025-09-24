@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/bare/player.gd" id="1_dovo2"]
 [ext_resource type="SpriteFrames" uid="uid://ddwd8mhvkayxd" path="res://scenes/player/bare/body_sf.tres" id="2_38p3q"]
-[ext_resource type="SpriteFrames" uid="uid://dx1fejvalblvx" path="res://scenes/player/bare/blue_cloth_sf.tres" id="3_1hkhk"]
+[ext_resource type="SpriteFrames" uid="uid://dkhlns8h3dshd" path="res://scenes/player/bare/green_pants_sf.tres" id="3_1hkhk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dovo2"]
 radius = 17.0
@@ -21,7 +21,7 @@ offset = Vector2(0, -32)
 visible = false
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("3_1hkhk")
-animation = &"bluepant_idle"
+animation = &"walk"
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Hairs" type="AnimatedSprite2D" parent="."]
