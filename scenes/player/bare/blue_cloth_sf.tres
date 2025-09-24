@@ -1,0 +1,83 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://dx1fejvalblvx"]
+
+[ext_resource type="Texture2D" uid="uid://bmjukqnp8j0f2" path="res://assets/GandalfHardcore/GandalfHardcore FREE Character Asset Pack/GandalfHardcore Character Asset Pack/Male Clothing/Blue Pants.png" id="1_pd1qj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uxqa5"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(0, 320, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xsmi"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(80, 320, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ae4oq"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(160, 320, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5g6tj"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(240, 320, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u5h6g"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(320, 320, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mkatf"]
+atlas = ExtResource("1_pd1qj")
+region = Rect2(400, 320, 80, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uxqa5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3xsmi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ae4oq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5g6tj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u5h6g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mkatf")
+}],
+"loop": true,
+"name": &"bluepant_attack",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_die",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_jumpDown",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_jumpUp",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_run",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"bluepant_walk",
+"speed": 5.0
+}]
