@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://cdrulmqvl8tif"]
 
-[ext_resource type="Script" uid="uid://pkqnwky8rfum" path="res://scenes/start/start.gd" id="1_dbemb"]
-[ext_resource type="AudioStream" uid="uid://7as7f2kw2dc7" path="res://assets/sounds/start/Michael Vignola - Under Water.mp3" id="2_8budp"]
+[ext_resource type="Script" uid="uid://pkqnwky8rfum" path="res://scenes/start/start.gd" id="1_oeh0t"]
+[ext_resource type="AudioStream" uid="uid://7as7f2kw2dc7" path="res://assets/sounds/start/Michael Vignola - Under Water.mp3" id="2_ae20m"]
 
 [node name="Node2D_Start" type="Node2D"]
-script = ExtResource("1_dbemb")
+script = ExtResource("1_oeh0t")
 
 [node name="Button_Play" type="Button" parent="."]
 offset_left = 434.0
@@ -22,8 +22,8 @@ offset_bottom = 348.0
 text = "Exit"
 
 [node name="AudioStreamPlayer2D_Start" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("2_8budp")
-volume_db = -7.675
+stream = ExtResource("2_ae20m")
+volume_db = -11.195
 autoplay = true
 
 [connection signal="pressed" from="Button_Play" to="." method="_on_button_play_pressed"]
