@@ -18,26 +18,42 @@ const INVERT_SPRITE_FLIP := true
 @export var attack_lock_time: float = 0.65
 
 @export var sprite_path: NodePath = NodePath("AnimatedSprite2D")
+@export var equipment_service_path: NodePath = NodePath("Player_Equipment")
 var sprite: AnimatedSprite2D = null
+var equipment_service = null
 var _prev_j_pressed: bool = false
 var _is_attacking: bool = false
 var _attack_timer: float = 0.0
 
 func _ready() -> void:
-	# Try configured NodePath first (Inspector)
-	if sprite_path and sprite_path != NodePath(""):
-		sprite = get_node_or_null(sprite_path) as AnimatedSprite2D
+	# Try to get the Player_Equipment service
+	if equipment_service_path and equipment_service_path != NodePath(""):
+		equipment_service = get_node_or_null(equipment_service_path)
+	
+	# Fallback: look for Player_Equipment as child
+	if not equipment_service:
+		equipment_service = get_node_or_null("Player_Equipment")
+	
+	# If we have equipment service, we'll use it for animations
+	# Otherwise, fallback to single sprite system
+	if not equipment_service:
+		print("Player_Equipment service not found, falling back to single sprite system")
+		# Try configured NodePath first (Inspector)
+		if sprite_path and sprite_path != NodePath(""):
+			sprite = get_node_or_null(sprite_path) as AnimatedSprite2D
 
-	# Fallback: direct child with that name
-	if not sprite:
-		sprite = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+		# Fallback: direct child with that name
+		if not sprite:
+			sprite = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
 
-	# Fallback: recursive search among descendants
-	if not sprite:
-		sprite = _find_animated_sprite_descendant(self)
+		# Fallback: recursive search among descendants
+		if not sprite:
+			sprite = _find_animated_sprite_descendant(self)
 
-	if not sprite:
-		push_error("AnimatedSprite2D node not found for player script; animation calls will be skipped.")
+		if not sprite:
+			push_error("AnimatedSprite2D node not found for player script; animation calls will be skipped.")
+	else:
+		print("Player_Equipment service found and connected")
 
 func _physics_process(delta: float) -> void:
 	# Apply gravity when in the air
@@ -132,20 +148,31 @@ func _update_animation(direction: float, is_running: bool) -> void:
 		else:
 			_play_animation_if_changed("walk")
 
-	# Flip sprite depending on movement direction (only if sprite exists)
-	if sprite:
-		if direction < 0:
-			sprite.flip_h = not INVERT_SPRITE_FLIP
-		elif direction > 0:
-			sprite.flip_h = INVERT_SPRITE_FLIP
+	# Flip sprites depending on movement direction
+	if direction < 0:
+		_flip_sprites(not INVERT_SPRITE_FLIP)
+	elif direction > 0:
+		_flip_sprites(INVERT_SPRITE_FLIP)
 
 
 func _play_animation_if_changed(anim_name: String) -> void:
-	if not sprite:
-		return
-	if sprite.animation != anim_name:
-		sprite.animation = anim_name
-		sprite.play()
+	# If we have equipment service, use it for multi-layer animations
+	if equipment_service:
+		equipment_service.play_animation(anim_name)
+	# Fallback to single sprite system
+	elif sprite:
+		if sprite.animation != anim_name:
+			sprite.animation = anim_name
+			sprite.play()
+
+
+func _flip_sprites(is_flipped: bool) -> void:
+	# If we have equipment service, use it for multi-layer flipping
+	if equipment_service:
+		equipment_service.flip_sprites(is_flipped)
+	# Fallback to single sprite system
+	elif sprite:
+		sprite.flip_h = is_flipped
 
 
 func _handle_attack_input() -> void:
@@ -177,3 +204,25 @@ func _find_animated_sprite_descendant(root):
 		if found:
 			return found
 	return null
+
+
+# --- EQUIPMENT MANAGEMENT FUNCTIONS ---
+# These functions provide easy access to the Player_Equipment service
+
+func equip_item(item_id: String) -> void:
+	"""Equip an item using the Player_Equipment service"""
+	if equipment_service:
+		equipment_service.equip_item(item_id)
+	else:
+		push_warning("Cannot equip item: Player_Equipment service not available")
+
+func get_equipped_items() -> Dictionary:
+	"""Get currently equipped items"""
+	if equipment_service:
+		return equipment_service.equipped_items
+	else:
+		return {}
+
+func is_equipment_service_available() -> bool:
+	"""Check if the Player_Equipment service is available"""
+	return equipment_service != null
