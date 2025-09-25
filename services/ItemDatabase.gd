@@ -13,46 +13,24 @@ func _ready():
 	_load_default_items()
 
 func _load_default_items():
-	# Example items - replace with your actual item data
-	# These should point to actual SpriteFrames resources you've created
-	
-	# Example clothes items
-	items_database["basic_shirt"] = {
+
+	# Player bare / default clothing resources (local to scenes/player/bare)
+	items_database["blue_pants"] = {
 		"type": "clothes",
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 43x Female Clothing/basic_shirt.tres",
-		"name": "Basic Shirt"
+		"path": "res://scenes/player/bare/blue_pants_sf.tres",
+		"name": "Blue Pants"
 	}
-	
-	items_database["leather_armor"] = {
-		"type": "clothes", 
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 43x Female Clothing/leather_armor.tres",
-		"name": "Leather Armor"
+
+	items_database["blue_skirt"] = {
+		"type": "clothes",
+		"path": "res://scenes/player/bare/blue_skirt_sf.tres",
+		"name": "Blue Skirt"
 	}
-	
-	# Example hair items
-	items_database["short_hair"] = {
-		"type": "hair",
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 58x Hair/short_hair.tres",
-		"name": "Short Hair"
-	}
-	
-	items_database["long_hair"] = {
-		"type": "hair",
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 58x Hair/long_hair.tres", 
-		"name": "Long Hair"
-	}
-	
-	# Example weapon items
-	items_database["sword"] = {
-		"type": "weapon",
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 36x Hand Items/sword.tres",
-		"name": "Basic Sword"
-	}
-	
-	items_database["staff"] = {
-		"type": "weapon",
-		"path": "res://assets/GandalfHardcore/GandalfHardcore 36x Hand Items/staff.tres",
-		"name": "Magic Staff"
+
+	items_database["boots"] = {
+		"type": "clothes",
+		"path": "res://scenes/player/bare/boots_sf.tres",
+		"name": "Boots"
 	}
 
 func get_item_data(item_id: String) -> Dictionary:

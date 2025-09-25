@@ -55,6 +55,15 @@ func _ready() -> void:
 	else:
 		print("Player_Equipment service found and connected")
 
+		# Auto-equip default starter items (if present in ItemDatabase)
+		# These IDs map to entries in services/ItemDatabase.gd
+		# We try each equip and ignore failures inside equip_item
+		# (the service will print a warning if the item isn't present)
+		if equipment_service:
+			equip_item("blue_pants")
+			equip_item("blue_skirt")
+			equip_item("boots")
+
 func _physics_process(delta: float) -> void:
 	# Apply gravity when in the air
 	if not is_on_floor():
