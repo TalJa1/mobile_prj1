@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5h2qxd7qd1k4y"]
+[gd_scene load_steps=2 format=3 uid="uid://buuy6x8f8yo6u"]
 
-[ext_resource type="Script" path="res://ui/inventory/InventoryUI.gd" id="1_inv_ui"]
+[ext_resource type="Script" uid="uid://xgsqoqbvlxc7" path="res://ui/inventory/InventoryUI.gd" id="1_inv_ui"]
 
 [node name="InventoryUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_inv_ui")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -27,6 +29,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10

@@ -16,6 +16,8 @@ const INVERT_SPRITE_FLIP := true
 @export var attack_action_name: String = "attack"
 @export var attack_scancode: int = 74 # J key scancode fallback (may be engine/platform dependent)
 @export var attack_lock_time: float = 0.65
+@export var inventory_action_name: String = "inventory"
+@export var inventory_key: int = KEY_I # use engine key constant for I
 
 @export var sprite_path: NodePath = NodePath("AnimatedSprite2D")
 @export var equipment_service_path: NodePath = NodePath("Equipment")
@@ -24,6 +26,9 @@ var equipment_service = null
 var _prev_j_pressed: bool = false
 var _is_attacking: bool = false
 var _attack_timer: float = 0.0
+var _prev_i_pressed: bool = false
+var inventory_ui = null
+const INVENTORY_UI_SCENE = preload("res://ui/inventory/InventoryUI.tscn")
 
 func _ready() -> void:
 	# Try to get the Player_Equipment service
@@ -124,6 +129,9 @@ func _physics_process(delta: float) -> void:
 	# Handle attack input after movement to avoid missing the key
 	_handle_attack_input()
 
+	# Handle inventory input (toggle with action or physical I key)
+	_handle_inventory_input()
+
 	# Decide which animation to play (attack lock check inside will prevent override)
 	_update_animation(direction, is_running)
 
@@ -191,6 +199,35 @@ func _handle_attack_input() -> void:
 
 	if attack_pressed:
 		_start_attack()
+
+
+func _handle_inventory_input() -> void:
+	# Edge-detect inventory key: prefer InputMap action, fallback to engine key constant
+	var i_pressed := false
+	if inventory_action_name != "" and InputMap.has_action(inventory_action_name):
+		i_pressed = Input.is_action_just_pressed(inventory_action_name)
+	else:
+		# Use engine key constant for fallback (edge-detect)
+		var phys := Input.is_physical_key_pressed(inventory_key)
+		i_pressed = phys and not _prev_i_pressed
+		_prev_i_pressed = phys
+
+	if i_pressed:
+		# Instantiate inventory UI if needed
+		if not inventory_ui:
+			if INVENTORY_UI_SCENE:
+				inventory_ui = INVENTORY_UI_SCENE.instantiate()
+				if get_tree().current_scene:
+					get_tree().current_scene.add_child(inventory_ui)
+				else:
+					get_tree().get_root().add_child(inventory_ui)
+				# ensure input processing on the UI
+				inventory_ui.set_process_input(true)
+			else:
+				print("Inventory scene missing: res://ui/inventory/InventoryUI.tscn")
+		# Toggle visibility
+		if inventory_ui:
+			inventory_ui.toggle_inventory()
 
 
 func _start_attack() -> void:

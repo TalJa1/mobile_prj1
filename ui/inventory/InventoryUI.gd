@@ -34,8 +34,23 @@ func _ready():
 	
 	# Create inventory slots
 	create_inventory_slots()
+
+	# Make sure this node receives _input calls
+	set_process_input(true)
+
+	# Ensure there is an input action for opening the inventory so the
+	# physical "I" key will work even if the project Input Map wasn't
+	# configured in the editor. Uses scancode 73 as a safe fallback for
+	# the 'I' key (matches common engine scancode numbering).
+	if not InputMap.has_action("inventory"):
+		InputMap.add_action("inventory")
+		var ev := InputEventKey.new()
+		# Use the engine key constant for the 'I' key and also set
+		# physical_scancode for broader compatibility across platforms.
+		ev.keycode = KEY_I
+		InputMap.action_add_event("inventory", ev)
 	# Try to find the InventoryData autoload. If it's missing, populate demo items so the UI isn't blank while building.
-	if get_tree().has_node("/root/InventoryData"):
+	if get_node_or_null("/root/InventoryData") != null:
 		_inv_data_node = get_node("/root/InventoryData")
 		# connect only if signal exists
 		if _inv_data_node.has_signal("inventory_changed"):
@@ -54,7 +69,9 @@ func _ready():
 
 func _input(event):
 	"""Handle input for opening/closing inventory."""
+	# Debug: log when inventory action is detected so we can verify input
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("inventory"):
+		print("[InventoryUI] input action pressed: ui_cancel/inventory. visible=", visible)
 		if visible:
 			hide_inventory()
 		else:
@@ -235,7 +252,7 @@ func _populate_demo_items():
 	If an ItemDatabase autoload exists, try to use real items from it. Otherwise create simple placeholders.
 	"""
 	var demo_list: Array = []
-	if get_tree().has_node("/root/ItemDatabase"):
+	if get_node_or_null("/root/ItemDatabase") != null:
 		var db = get_node("/root/ItemDatabase")
 		if db.has_method("get_all_items"):
 			var all = db.get_all_items()
@@ -254,7 +271,7 @@ func _populate_demo_items():
 			break
 		var slot = inventory_slots[idx]
 		# If ItemDatabase exists and returns data, use setup_slot to show icons/tooltips
-		if get_tree().has_node("/root/ItemDatabase") and ItemDatabase.get_item_data(entry["id"]) != null:
+		if get_node_or_null("/root/ItemDatabase") != null and ItemDatabase.get_item_data(entry["id"]) != null:
 			slot.setup_slot(entry["id"], entry["quantity"])
 		else:
 			# Manual placeholder so slot isn't completely empty
