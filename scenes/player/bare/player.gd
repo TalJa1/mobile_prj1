@@ -213,7 +213,8 @@ func _handle_inventory_input() -> void:
 		_prev_i_pressed = phys
 
 	if i_pressed:
-		# Instantiate inventory UI if needed
+		# First press: instantiate and show UI if it doesn't exist yet.
+		# Subsequent presses are handled by the UI's own input processing.
 		if not inventory_ui:
 			if INVENTORY_UI_SCENE:
 				inventory_ui = INVENTORY_UI_SCENE.instantiate()
@@ -221,13 +222,17 @@ func _handle_inventory_input() -> void:
 					get_tree().current_scene.add_child(inventory_ui)
 				else:
 					get_tree().get_root().add_child(inventory_ui)
-				# ensure input processing on the UI
+				# ensure input processing on the UI and the process loop
 				inventory_ui.set_process_input(true)
+				if inventory_ui.has_method("set_process"):
+					inventory_ui.set_process(true)
+				# Prevent the creating key press from immediately toggling the UI
+				if _node_has_property(inventory_ui, "ignore_next_toggle"):
+					inventory_ui.ignore_next_toggle = true
+				# Show the UI explicitly (don't toggle to avoid racing with UI input)
+				inventory_ui.show_inventory()
 			else:
 				print("Inventory scene missing: res://ui/inventory/InventoryUI.tscn")
-		# Toggle visibility
-		if inventory_ui:
-			inventory_ui.toggle_inventory()
 
 
 func _start_attack() -> void:
@@ -245,6 +250,15 @@ func _find_animated_sprite_descendant(root):
 		if found:
 			return found
 	return null
+
+
+func _node_has_property(node: Node, prop_name: String) -> bool:
+	if not node:
+		return false
+	for p in node.get_property_list():
+		if p.has("name") and p.name == prop_name:
+			return true
+	return false
 
 
 # --- EQUIPMENT MANAGEMENT FUNCTIONS ---

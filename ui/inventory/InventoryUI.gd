@@ -21,6 +21,11 @@ const INVENTORY_SLOT_SCENE = preload("res://ui/inventory/InventorySlot.tscn")
 # Inventory slots array
 var inventory_slots: Array = []
 
+# When the UI is created in response to a key press by another controller
+# (for example the player script), set this flag so the UI ignores the
+# immediate input that created it to avoid double-toggle.
+var ignore_next_toggle: bool = false
+
 # Cached reference to the InventoryData autoload (if present)
 var _inv_data_node: Node = null
 
@@ -37,6 +42,7 @@ func _ready():
 
 	# Make sure this node receives _input calls
 	set_process_input(true)
+	set_process(true)
 
 	# Ensure there is an input action for opening the inventory so the
 	# physical "I" key will work even if the project Input Map wasn't
@@ -67,12 +73,21 @@ func _ready():
 	else:
 		hide_inventory()
 
-func _input(event):
-	"""Handle input for opening/closing inventory."""
-	# Debug: log when inventory action is detected so we can verify input
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("inventory"):
-		print("[InventoryUI] input action pressed: ui_cancel/inventory. visible=", visible)
-		if visible:
+
+func _process(_delta: float) -> void:
+	# Use action edge-detection so toggling works regardless of GUI focus.
+	var open_action := Input.is_action_just_pressed("inventory")
+	var cancel_action := Input.is_action_just_pressed("ui_cancel")
+
+	# If we were just instantiated by another script, ignore the first press
+	if ignore_next_toggle and open_action:
+		ignore_next_toggle = false
+		return
+
+	if open_action or cancel_action:
+		# Use canvas_layer visibility for the actual visual state
+		print("[InventoryUI] toggle input detected. canvas_layer.visible=", canvas_layer.visible)
+		if canvas_layer.visible:
 			hide_inventory()
 		else:
 			show_inventory()
@@ -118,16 +133,20 @@ func refresh_inventory():
 
 func show_inventory():
 	"""Show the inventory UI."""
+	# CanvasLayer holds the visible UI elements; set it visible and
+	# keep the Control's visible in sync for any logic that checks it.
+	canvas_layer.visible = true
 	visible = true
 	refresh_inventory()
 
 func hide_inventory():
 	"""Hide the inventory UI."""
+	canvas_layer.visible = false
 	visible = false
 
 func toggle_inventory():
 	"""Toggle inventory visibility."""
-	if visible:
+	if canvas_layer.visible:
 		hide_inventory()
 	else:
 		show_inventory()
