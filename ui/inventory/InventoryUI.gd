@@ -171,23 +171,42 @@ func _on_slot_right_clicked(slot):
 
 func equip_item(item_id: String):
 	"""Attempt to equip an item."""
-	# Get the player's equipment manager
+	# Get the player's equipment manager safely
 	var player = get_tree().get_first_node_in_group("player")
 	if not player:
 		print("No player found!")
 		return
-	
-	var equipment_manager = player.get_node("Equipment")
-	if not equipment_manager:
+
+	# Try common child names first without throwing
+	var equipment_manager = player.get_node_or_null("Equipment")
+	if equipment_manager == null:
+		equipment_manager = player.get_node_or_null("Node2D_Equipment")
+
+	# As a last resort, search descendants for a node that implements equip_item()
+	if equipment_manager == null:
+		equipment_manager = _find_equipment_node(player)
+
+	if equipment_manager == null:
 		print("No equipment manager found!")
 		return
-	
-	# Try to equip the item
-	if equipment_manager.equip_item(item_id):
+
+	# Try to equip the item if the manager supports the method
+	if equipment_manager.has_method("equip_item") and equipment_manager.equip_item(item_id):
 		item_equipped.emit(item_id)
 		print("Successfully equipped: ", item_id)
 	else:
 		print("Failed to equip: ", item_id)
+
+
+func _find_equipment_node(root: Node) -> Node:
+	# Recursively search descendants for a node that implements equip_item()
+	for child in root.get_children():
+		if child.has_method("equip_item"):
+			return child
+		var found = _find_equipment_node(child)
+		if found:
+			return found
+	return null
 
 func use_consumable(item_id: String):
 	"""Use a consumable item."""
