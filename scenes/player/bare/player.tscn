@@ -2,14 +2,14 @@
 
 [ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/bare/player.gd" id="1_dovo2"]
 [ext_resource type="SpriteFrames" uid="uid://ddwd8mhvkayxd" path="res://scenes/player/bare/body_sf.tres" id="2_38p3q"]
-[ext_resource type="Script" uid="uid://dsii1xb73qtg6" path="res://services/player_equipment.gd" id="2_wmeex"]
+[ext_resource type="Script" uid="uid://bjcvn7bw0ahc6" path="res://services/player_equipment.gd" id="2_wmeex"]
 [ext_resource type="SpriteFrames" uid="uid://b143xykwac8s2" path="res://scenes/player/bare/blue_skirt_sf.tres" id="3_1hkhk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dovo2"]
 radius = 17.0
 height = 89.75
 
-[node name="CharacterBody2D_Player" type="CharacterBody2D"]
+[node name="CharacterBody2D_Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_dovo2")
 
 [node name="Node2D_Equipment" type="Node2D" parent="."]
@@ -18,14 +18,15 @@ script = ExtResource("2_wmeex")
 [node name="AnimatedSprite2D_Body" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_38p3q")
-animation = &"run"
+animation = &"idle"
+frame_progress = 0.473948
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Cloths" type="AnimatedSprite2D" parent="."]
-visible = false
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("3_1hkhk")
-animation = &"walk"
+animation = &"idle"
+frame_progress = 0.250791
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Hairs" type="AnimatedSprite2D" parent="."]

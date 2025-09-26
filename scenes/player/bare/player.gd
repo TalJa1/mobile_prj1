@@ -18,7 +18,7 @@ const INVERT_SPRITE_FLIP := true
 @export var attack_lock_time: float = 0.65
 
 @export var sprite_path: NodePath = NodePath("AnimatedSprite2D")
-@export var equipment_service_path: NodePath = NodePath("Player_Equipment")
+@export var equipment_service_path: NodePath = NodePath("Equipment")
 var sprite: AnimatedSprite2D = null
 var equipment_service = null
 var _prev_j_pressed: bool = false
@@ -30,14 +30,18 @@ func _ready() -> void:
 	if equipment_service_path and equipment_service_path != NodePath(""):
 		equipment_service = get_node_or_null(equipment_service_path)
 	
-	# Fallback: look for Player_Equipment as child
+	# Fallback: look for Equipment as child
 	if not equipment_service:
-		equipment_service = get_node_or_null("Player_Equipment")
+		equipment_service = get_node_or_null("Equipment")
+	
+	# Fallback: look for Node2D_Equipment as child
+	if not equipment_service:
+		equipment_service = get_node_or_null("Node2D_Equipment")
 	
 	# If we have equipment service, we'll use it for animations
 	# Otherwise, fallback to single sprite system
 	if not equipment_service:
-		print("Player_Equipment service not found, falling back to single sprite system")
+		print("Equipment service not found, falling back to single sprite system")
 		# Try configured NodePath first (Inspector)
 		if sprite_path and sprite_path != NodePath(""):
 			sprite = get_node_or_null(sprite_path) as AnimatedSprite2D
@@ -53,16 +57,7 @@ func _ready() -> void:
 		if not sprite:
 			push_error("AnimatedSprite2D node not found for player script; animation calls will be skipped.")
 	else:
-		print("Player_Equipment service found and connected")
-
-		# Auto-equip default starter items (if present in ItemDatabase)
-		# These IDs map to entries in services/ItemDatabase.gd
-		# We try each equip and ignore failures inside equip_item
-		# (the service will print a warning if the item isn't present)
-		if equipment_service:
-			equip_item("blue_pants")
-			equip_item("blue_skirt")
-			equip_item("boots")
+		print("Equipment service found and connected")
 
 func _physics_process(delta: float) -> void:
 	# Apply gravity when in the air
@@ -143,9 +138,9 @@ func _update_animation(direction: float, is_running: bool) -> void:
 	if not is_on_floor():
 		# Use upward / downward frame based on vertical velocity
 		if velocity.y < 0:
-			_play_animation_if_changed("jump_up")
+			_play_animation_if_changed("jumpUp")
 		else:
-			_play_animation_if_changed("jump_down")
+			_play_animation_if_changed("jumpDown")
 		return
 
 	# On floor: choose between idle, walk, run
@@ -219,11 +214,11 @@ func _find_animated_sprite_descendant(root):
 # These functions provide easy access to the Player_Equipment service
 
 func equip_item(item_id: String) -> void:
-	"""Equip an item using the Player_Equipment service"""
+	"""Equip an item using the Equipment service"""
 	if equipment_service:
 		equipment_service.equip_item(item_id)
 	else:
-		push_warning("Cannot equip item: Player_Equipment service not available")
+		push_warning("Cannot equip item: Equipment service not available")
 
 func get_equipped_items() -> Dictionary:
 	"""Get currently equipped items"""
@@ -233,5 +228,10 @@ func get_equipped_items() -> Dictionary:
 		return {}
 
 func is_equipment_service_available() -> bool:
-	"""Check if the Player_Equipment service is available"""
+	"""Check if the Equipment service is available"""
 	return equipment_service != null
+
+# Add a heal function for consumables
+func heal(amount: int):
+	"""Heal the player by a certain amount"""
+	print("Player healed for ", amount, " HP")

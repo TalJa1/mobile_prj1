@@ -204,7 +204,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_mkatf")
 }],
 "loop": true,
-"name": &"bluepant_attack",
+"name": &"attack",
 "speed": 10.0
 }, {
 "frames": [{
@@ -239,7 +239,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_0ofi6")
 }],
 "loop": true,
-"name": &"bluepant_die",
+"name": &"die",
 "speed": 10.0
 }, {
 "frames": [{
@@ -259,7 +259,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_ndwt5")
 }],
 "loop": true,
-"name": &"bluepant_idle",
+"name": &"idle",
 "speed": 5.0
 }, {
 "frames": [{
@@ -276,7 +276,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_bujxi")
 }],
 "loop": true,
-"name": &"bluepant_jumpDown",
+"name": &"jumpDown",
 "speed": 5.0
 }, {
 "frames": [{
@@ -293,7 +293,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_aoe3u")
 }],
 "loop": true,
-"name": &"bluepant_jumpUp",
+"name": &"jumpUp",
 "speed": 5.0
 }, {
 "frames": [{
@@ -322,7 +322,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_8k0il")
 }],
 "loop": true,
-"name": &"bluepant_run",
+"name": &"run",
 "speed": 20.0
 }, {
 "frames": [{
@@ -351,6 +351,6 @@ animations = [{
 "texture": SubResource("AtlasTexture_sjdif")
 }],
 "loop": true,
-"name": &"bluepant_walk",
+"name": &"walk",
 "speed": 10.0
 }]

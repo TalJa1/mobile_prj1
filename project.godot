@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ItemDatabase="*res://services/ItemDatabase.gd"
+ItemDatabase="*res://autoloads/ItemDatabase.gd"
+InventoryData="*res://autoloads/InventoryData.gd"
 
 [rendering]
 
