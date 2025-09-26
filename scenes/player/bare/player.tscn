@@ -46,7 +46,7 @@ frame_progress = 0.145398
 offset = Vector2(0, -32)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-1, -130)
+position = Vector2(0, -148)
 scale = Vector2(2, 2)
 zoom = Vector2(1.5, 1.5)
 
