@@ -2,8 +2,8 @@
 # Script for a single inventory slot UI element
 extends Button
 
-@onready var icon_texture_rect: TextureRect = $TextureRect
-@onready var quantity_label: Label = null  # Will be added if needed
+@onready var icon_texture_rect: TextureRect = get_node_or_null("TextureRect")
+@onready var quantity_label: Label = get_node_or_null("QuantityLabel")  # Will be added if needed
 
 var item_id: String = ""
 var quantity: int = 0
@@ -28,7 +28,7 @@ func _ready():
 		quantity_label.offset_left = -20
 		quantity_label.offset_top = -20
 		quantity_label.size = Vector2(18, 18)
-		add_child(quantity_label)
+		call_deferred("add_child", quantity_label)
 	else:
 		quantity_label = $QuantityLabel
 
@@ -46,19 +46,31 @@ func setup_slot(new_item_id: String, new_quantity: int = 1):
 		clear_slot()
 		return
 	
-	# Set icon
+	# Set icon (guard if node missing)
 	var icon_path = item_data.get("icon_path", "")
-	if icon_path != "" and ResourceLoader.exists(icon_path):
-		icon_texture_rect.texture = load(icon_path)
+	if icon_texture_rect:
+		if icon_path != "" and ResourceLoader.exists(icon_path):
+			icon_texture_rect.texture = load(icon_path)
+		else:
+			# intentionally set to null if no icon found
+			icon_texture_rect.texture = null
 	else:
-		icon_texture_rect.texture = null
-	
-	# Set quantity text
-	if quantity > 1:
-		quantity_label.text = str(quantity)
-		quantity_label.visible = true
+		push_warning("InventorySlot: icon TextureRect not found for slot; cannot set texture.")
+
+	# Set quantity text (guard if label missing)
+	if not quantity_label:
+		quantity_label = get_node_or_null("QuantityLabel")
+
+	if quantity_label:
+		if quantity > 1:
+			quantity_label.text = str(quantity)
+			quantity_label.visible = true
+		else:
+			quantity_label.visible = false
 	else:
-		quantity_label.visible = false
+		# Not fatal — slot can function without a quantity label
+		if quantity > 1:
+			push_warning("InventorySlot: QuantityLabel missing but quantity > 1 for item %s" % item_id)
 	
 	# Set tooltip
 	var item_name = item_data.get("name", item_id)
@@ -69,8 +81,10 @@ func clear_slot():
 	"""Clear the slot of any item."""
 	item_id = ""
 	quantity = 0
-	icon_texture_rect.texture = null
-	quantity_label.visible = false
+	if icon_texture_rect:
+		icon_texture_rect.texture = null
+	if quantity_label:
+		quantity_label.visible = false
 	tooltip_text = ""
 
 func is_empty() -> bool:
@@ -122,12 +136,16 @@ func _get_drag_data(_pos):
 	if is_empty():
 		return null
 	
-	# Create drag preview
-	var preview = TextureRect.new()
-	preview.texture = icon_texture_rect.texture
-	preview.size = icon_texture_rect.size
-	set_drag_preview(preview)
-	
+	# Create drag preview if possible
+	if icon_texture_rect and icon_texture_rect.texture:
+		var preview = TextureRect.new()
+		preview.texture = icon_texture_rect.texture
+		preview.size = icon_texture_rect.size
+		set_drag_preview(preview)
+	else:
+		# No preview available — continue returning data so the inventory UI can handle it
+		push_warning("InventorySlot: No icon available for drag preview for item %s" % item_id)
+
 	return {
 		"item_id": item_id,
 		"quantity": quantity,

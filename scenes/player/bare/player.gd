@@ -219,9 +219,9 @@ func _handle_inventory_input() -> void:
 			if INVENTORY_UI_SCENE:
 				inventory_ui = INVENTORY_UI_SCENE.instantiate()
 				if get_tree().current_scene:
-					get_tree().current_scene.add_child(inventory_ui)
+					get_tree().current_scene.call_deferred("add_child", inventory_ui)
 				else:
-					get_tree().get_root().add_child(inventory_ui)
+					get_tree().get_root().call_deferred("add_child", inventory_ui)
 				# ensure input processing on the UI and the process loop
 				inventory_ui.set_process_input(true)
 				if inventory_ui.has_method("set_process"):
@@ -229,8 +229,13 @@ func _handle_inventory_input() -> void:
 				# Prevent the creating key press from immediately toggling the UI
 				if _node_has_property(inventory_ui, "ignore_next_toggle"):
 					inventory_ui.ignore_next_toggle = true
-				# Show the UI explicitly (don't toggle to avoid racing with UI input)
-				inventory_ui.show_inventory()
+					# Request the UI to show; InventoryUI will perform the actual
+					# show during its own _ready() if needed to avoid nil child access.
+					if inventory_ui.has_method("request_show"):
+						inventory_ui.request_show()
+					else:
+						# Fallback — call show_inventory if request_show isn't implemented
+						inventory_ui.show_inventory()
 			else:
 				print("Inventory scene missing: res://ui/inventory/InventoryUI.tscn")
 

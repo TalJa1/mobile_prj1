@@ -8,22 +8,32 @@ extends Node
 @onready var hair_sprite = get_node("../AnimatedSprite2D_Hairs")
 @onready var weapon_sprite = get_node("../AnimatedSprite2D_Weapons")
 
+# Optional per-slot clothing sprites (created if not present in the scene)
+@onready var cloth_top_sprite = get_node_or_null("../AnimatedSprite2D_Cloth_Top")
+@onready var cloth_bottom_sprite = get_node_or_null("../AnimatedSprite2D_Cloth_Bottom")
+@onready var cloth_shoes_sprite = get_node_or_null("../AnimatedSprite2D_Cloth_Shoes")
+@onready var cloth_overlay_sprite = get_node_or_null("../AnimatedSprite2D_Cloth_Overlay")
+
 # An array to easily access all layers at once
 var all_sprites = []
 
 # Currently equipped items by slot
 var equipped_items = {
 	"body": null,
-	"clothes": null,
-	"hair": null, 
+	"clothes_top": null,
+	"clothes_bottom": null,
+	"clothes_shoes": null,
+	"clothes_overlay": null,
+	"hair": null,
 	"weapon": null
 }
 
-# Track multiple clothing pieces
+# Track multiple clothing pieces by logical slot name
 var clothing_items = {
 	"top": null,
 	"bottom": null,
 	"shoes": null,
+	"overlay": null,
 	"accessory": null
 }
 
@@ -34,7 +44,54 @@ func _ready():
 	print("Equipment manager starting...")
 	
 	# Populate the array when the game starts
-	all_sprites = [body_sprite, clothes_sprite, hair_sprite, weapon_sprite]
+	# Ensure per-slot clothing sprites exist. Prefer explicit nodes in the scene
+	# but create them dynamically if missing so multiple clothing layers can be shown.
+	var parent_node = get_parent() # CharacterBody2D_Player
+
+	if cloth_top_sprite == null:
+		cloth_top_sprite = AnimatedSprite2D.new()
+		cloth_top_sprite.name = "AnimatedSprite2D_Cloth_Top"
+		# Match transform and appearance of the existing clothes layer
+		if clothes_sprite:
+			cloth_top_sprite.scale = clothes_sprite.scale
+			cloth_top_sprite.offset = clothes_sprite.offset
+		cloth_top_sprite.z_index = 2
+		if parent_node:
+			parent_node.call_deferred("add_child", cloth_top_sprite)
+
+	if cloth_bottom_sprite == null:
+		cloth_bottom_sprite = AnimatedSprite2D.new()
+		cloth_bottom_sprite.name = "AnimatedSprite2D_Cloth_Bottom"
+		if clothes_sprite:
+			cloth_bottom_sprite.scale = clothes_sprite.scale
+			cloth_bottom_sprite.offset = clothes_sprite.offset
+		cloth_bottom_sprite.z_index = 1
+		if parent_node:
+			parent_node.call_deferred("add_child", cloth_bottom_sprite)
+
+	if cloth_shoes_sprite == null:
+		cloth_shoes_sprite = AnimatedSprite2D.new()
+		cloth_shoes_sprite.name = "AnimatedSprite2D_Cloth_Shoes"
+		if clothes_sprite:
+			cloth_shoes_sprite.scale = clothes_sprite.scale
+			cloth_shoes_sprite.offset = clothes_sprite.offset
+		cloth_shoes_sprite.z_index = 3
+		if parent_node:
+			parent_node.call_deferred("add_child", cloth_shoes_sprite)
+
+	if cloth_overlay_sprite == null:
+		cloth_overlay_sprite = AnimatedSprite2D.new()
+		cloth_overlay_sprite.name = "AnimatedSprite2D_Cloth_Overlay"
+		if clothes_sprite:
+			cloth_overlay_sprite.scale = clothes_sprite.scale
+			cloth_overlay_sprite.offset = clothes_sprite.offset
+		cloth_overlay_sprite.z_index = 4
+		if parent_node:
+			parent_node.call_deferred("add_child", cloth_overlay_sprite)
+
+	# Keep existing clothes_sprite for backward compatibility (combined clothing)
+	# Build ordered list for animation playback. Order: body, top, bottom, shoes, clothes(combined), hair, weapon
+	all_sprites = [body_sprite, cloth_top_sprite, cloth_bottom_sprite, cloth_shoes_sprite, cloth_overlay_sprite, clothes_sprite, hair_sprite, weapon_sprite]
 	
 	print("Sprite references - Body: ", body_sprite, " Clothes: ", clothes_sprite, " Hair: ", hair_sprite, " Weapon: ", weapon_sprite)
 	
@@ -109,22 +166,57 @@ func equip_item(item_id: String) -> bool:
 
 func _equip_clothing(item_id: String, clothing_slot: int, sprite_frames: Resource) -> bool:
 	"""Handle equipping clothing items to the clothes layer."""
-	if not clothes_sprite:
-		return false
-	
-	# For now, all clothing goes to the clothes sprite layer
-	# In a more complex system, you might have separate sprites for different clothing types
-	clothes_sprite.sprite_frames = sprite_frames
-	clothes_sprite.play("idle")
-	
-	# Track what type of clothing is equipped
+	# Equip to the correct per-slot sprite so multiple clothing pieces can be visible
+	var slot_names = ["top", "bottom", "shoes", "accessory"]
+	var target_sprite: AnimatedSprite2D = null
+	var slot_name = ""
 	match clothing_slot:
-		0, 1, 2, 3:  # TOP, BOTTOM, SHOES, ACCESSORY
-			equipped_items["clothes"] = item_id
-			var slot_names = ["top", "bottom", "shoes", "accessory"]
-			if clothing_slot < slot_names.size():
-				clothing_items[slot_names[clothing_slot]] = item_id
-	
+		0:
+			target_sprite = cloth_top_sprite
+			slot_name = "top"
+		1:
+			target_sprite = cloth_bottom_sprite
+			slot_name = "bottom"
+		2:
+			target_sprite = cloth_shoes_sprite
+			slot_name = "shoes"
+		4:
+			target_sprite = cloth_overlay_sprite
+			slot_name = "overlay"
+		3:
+			# Accessory: use the combined clothes sprite as a fallback
+			target_sprite = clothes_sprite
+			slot_name = "accessory"
+		_:
+			# Unknown slot: put on combined clothes layer
+			target_sprite = clothes_sprite
+			slot_name = "unknown"
+
+	if not target_sprite:
+		print("ERROR: No sprite available for clothing slot: ", clothing_slot)
+		return false
+
+	# Assign sprite frames and play
+	target_sprite.sprite_frames = sprite_frames
+	if target_sprite.sprite_frames and target_sprite.sprite_frames.has_animation("idle"):
+		target_sprite.play("idle")
+
+	# Track equipped state
+	if slot_name == "top":
+		equipped_items["clothes_top"] = item_id
+	elif slot_name == "bottom":
+		equipped_items["clothes_bottom"] = item_id
+	elif slot_name == "shoes":
+		equipped_items["clothes_shoes"] = item_id
+	elif slot_name == "overlay":
+		equipped_items["clothes_overlay"] = item_id
+	else:
+		# Unknown slot: keep existing combined clothes behavior
+		equipped_items["clothes_top"] = equipped_items.get("clothes_top", null) # no-op keep existing
+
+	if slot_name in slot_names:
+		clothing_items[slot_name] = item_id
+
 	return true
 
 func _auto_equip_starting_items():
@@ -154,25 +246,35 @@ func _auto_equip_starting_items():
 
 func unequip_item(slot: String) -> bool:
 	"""Unequip an item from a slot. Returns true if successful."""
+	# Support unequipping per-slot clothing keys as well as legacy slots
 	if not equipped_items.has(slot):
 		return false
-	
-	var target_sprite = null
+
+	var target_sprite: AnimatedSprite2D = null
 	match slot:
+		"clothes_top":
+			target_sprite = cloth_top_sprite
+		"clothes_bottom":
+			target_sprite = cloth_bottom_sprite
+		"clothes_shoes":
+			target_sprite = cloth_shoes_sprite
 		"clothes":
 			target_sprite = clothes_sprite
 		"hair":
 			target_sprite = hair_sprite
 		"weapon":
 			target_sprite = weapon_sprite
-	
+
 	if target_sprite:
 		target_sprite.sprite_frames = null
+		# Clear the matching equipped_items key
 		equipped_items[slot] = null
+		if slot == "clothes_overlay":
+			clothing_items["overlay"] = null
 		equipment_changed.emit(slot, "")
 		print("Unequipped from slot: ", slot)
 		return true
-	
+
 	return false
 
 func get_equipped_item(slot: String) -> String:

@@ -17,8 +17,10 @@ func _ready() -> void:
 		inventory_ui = ui_scene.instantiate()
 		# Add to the current scene so it sits above gameplay nodes
 		var parent = get_tree().current_scene if get_tree().current_scene else get_tree().get_root()
-		parent.add_child(inventory_ui)
-		inventory_ui.visible = false
+		if parent:
+			parent.call_deferred("add_child", inventory_ui)
+			# ensure visibility is set after it's added
+			inventory_ui.visible = false
 
 	# Ensure the input action exists (fallback) so the I key works
 	if not InputMap.has_action("inventory"):

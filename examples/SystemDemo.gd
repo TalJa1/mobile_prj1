@@ -81,7 +81,7 @@ func open_inventory_ui():
 	# You would need to instantiate and add the inventory UI scene to the tree
 	var inventory_ui_scene = preload("res://ui/inventory/InventoryUI.tscn")
 	var inventory_ui = inventory_ui_scene.instantiate()
-	get_tree().current_scene.add_child(inventory_ui)
+	get_tree().current_scene.call_deferred("add_child", inventory_ui)
 	inventory_ui.show_inventory()
 
 # Function to demonstrate adding the inventory UI to a scene

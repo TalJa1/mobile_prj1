@@ -26,6 +26,12 @@ var inventory_slots: Array = []
 # immediate input that created it to avoid double-toggle.
 var ignore_next_toggle: bool = false
 
+# If a caller wants this UI shown before it has entered the tree,
+# they should call request_show(), which sets this flag and will
+# actually show the UI during _ready(). This prevents calling
+# show_inventory() when onready child references are still null.
+var _pending_show: bool = false
+
 # Cached reference to the InventoryData autoload (if present)
 var _inv_data_node: Node = null
 
@@ -73,6 +79,12 @@ func _ready():
 	else:
 		hide_inventory()
 
+	# If a caller asked for the UI to be shown before this node was ready,
+	# satisfy that request now.
+	if _pending_show:
+		_pending_show = false
+		show_inventory()
+
 
 func _process(_delta: float) -> void:
 	# Use action edge-detection so toggling works regardless of GUI focus.
@@ -98,7 +110,7 @@ func create_inventory_slots():
 	
 	for i in range(total_slots):
 		var slot_instance = INVENTORY_SLOT_SCENE.instantiate()
-		grid_container.add_child(slot_instance)
+		grid_container.call_deferred("add_child", slot_instance)
 		inventory_slots.append(slot_instance)
 		
 		# Connect slot signals
@@ -133,16 +145,35 @@ func refresh_inventory():
 
 func show_inventory():
 	"""Show the inventory UI."""
-	# CanvasLayer holds the visible UI elements; set it visible and
-	# keep the Control's visible in sync for any logic that checks it.
-	canvas_layer.visible = true
+	# CanvasLayer holds the visible UI elements; set it visible if present
+	# and keep the Control's visible in sync for any logic that checks it.
+	if canvas_layer:
+		canvas_layer.visible = true
+	else:
+		# If canvas_layer is missing, warn and set the Control visible so
+		# at least something shows up instead of crashing.
+		push_warning("InventoryUI: CanvasLayer not found when showing inventory")
 	visible = true
 	refresh_inventory()
 
 func hide_inventory():
 	"""Hide the inventory UI."""
-	canvas_layer.visible = false
+	if canvas_layer:
+		canvas_layer.visible = false
+	else:
+		push_warning("InventoryUI: CanvasLayer not found when hiding inventory")
 	visible = false
+
+func request_show():
+	"""Request the inventory UI to be shown as soon as it's ready.
+	Use this from external scripts that instantiate the UI before it enters
+	the scene tree (avoids accessing null onready children)."""
+	# If we're already inside the tree and ready, just show now.
+	# Otherwise mark pending so _ready() will show when initialization completes.
+	if is_inside_tree():
+		show_inventory()
+	else:
+		_pending_show = true
 
 func toggle_inventory():
 	"""Toggle inventory visibility."""

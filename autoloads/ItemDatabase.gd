@@ -16,6 +16,7 @@ enum ClothingSlot {
 	TOP,
 	BOTTOM,
 	SHOES,
+	OVERLAY,
 	ACCESSORY
 }
 
@@ -54,7 +55,7 @@ func _initialize_items():
 		"description": "A stylish blue skirt.",
 		"icon_path": "res://assets/icons/blue_skirt_icon.png",
 		"sprite_frames_path": "res://scenes/player/bare/blue_skirt_sf.tres",
-		"clothing_slot": ClothingSlot.BOTTOM,
+		"clothing_slot": ClothingSlot.OVERLAY,
 		"stackable": false,
 		"max_stack": 1
 	}
