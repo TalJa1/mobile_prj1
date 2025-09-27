@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/bare/player.gd" id="1_dovo2"]
 [ext_resource type="SpriteFrames" uid="uid://ddwd8mhvkayxd" path="res://scenes/player/bare/body_sf.tres" id="2_38p3q"]
 [ext_resource type="Script" uid="uid://bjcvn7bw0ahc6" path="res://services/player_equipment.gd" id="2_wmeex"]
-[ext_resource type="SpriteFrames" uid="uid://b143xykwac8s2" path="res://scenes/player/bare/blue_skirt_sf.tres" id="3_1hkhk"]
+[ext_resource type="SpriteFrames" uid="uid://bsnqh0t7kgpfa" path="res://scenes/player/bare/orange_skirt_sf.tres" id="4_wmeex"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dovo2"]
 radius = 17.0
@@ -24,9 +24,8 @@ offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Cloths" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
-sprite_frames = ExtResource("3_1hkhk")
-animation = &"idle"
-frame_progress = 0.250791
+sprite_frames = ExtResource("4_wmeex")
+animation = &"walk"
 offset = Vector2(0, -32)
 
 [node name="AnimatedSprite2D_Hairs" type="AnimatedSprite2D" parent="."]
