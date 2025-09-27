@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c5btnbcwktila" path="res://scenes/player/bare/player.gd" id="1_dovo2"]
 [ext_resource type="SpriteFrames" uid="uid://ddwd8mhvkayxd" path="res://scenes/player/bare/body_sf.tres" id="2_38p3q"]
 [ext_resource type="Script" uid="uid://bjcvn7bw0ahc6" path="res://services/player_equipment.gd" id="2_wmeex"]
-[ext_resource type="SpriteFrames" uid="uid://bsnqh0t7kgpfa" path="res://scenes/player/bare/orange_skirt_sf.tres" id="4_wmeex"]
+[ext_resource type="SpriteFrames" uid="uid://dcf7umfpxq2fq" path="res://scenes/player/bare/green_underwear_sf.tres" id="4_wmeex"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dovo2"]
 radius = 17.0
